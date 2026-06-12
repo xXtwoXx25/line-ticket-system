@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FFCC00; /* Yellow bird tone */
+  --color-primary-dark: #E6B800;
+  --color-background: #F8FAFC;
+}
+
+body {
+  background-color: var(--color-background);
+  font-family: 'Inter', sans-serif;
+}
