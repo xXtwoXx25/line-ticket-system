@@ -1,0 +1,8 @@
+/* Redirect all routes to index.html for React Router (BrowserRouter) */
+/* Required for Render.com static site hosting */
+/*  /liff → serves index.html, React Router handles the route */
+/*  /admin → serves index.html, React Router handles the route */
+/* The 200 status means "serve this file" (not a redirect) */
+/liff   /index.html  200
+/admin  /index.html  200
+/*      /index.html  200

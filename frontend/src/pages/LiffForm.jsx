@@ -36,16 +36,21 @@ export default function LiffForm() {
       try {
         await liff.init({
           liffId: import.meta.env.VITE_LIFF_ID,
-          // withLoginOnExternalBrowser: true  ← uncomment if opening in regular browser
+          withLoginOnExternalBrowser: true,
         });
 
         console.log('[LIFF] isLoggedIn:', liff.isLoggedIn());
         console.log('[LIFF] isInClient:', liff.isInClient());
 
         if (!liff.isLoggedIn()) {
-          // Redirect back to this exact page after login (preserves query params)
-          liff.login({ redirectUri: window.location.href });
-          return; // stop here — browser will redirect
+          // redirectUri must match LIFF Endpoint URL registered in LINE Developers Console
+          // Production: https://line-ticket-system-frontend.onrender.com/liff
+          const redirectUri = import.meta.env.VITE_APP_URL
+            ? `${import.meta.env.VITE_APP_URL}/liff`
+            : `${window.location.origin}/liff`;
+          console.log('[LIFF] Redirecting to login, redirectUri:', redirectUri);
+          liff.login({ redirectUri });
+          return;
         }
 
         // ── Logged in: get profile ───────────────────────────────────────────

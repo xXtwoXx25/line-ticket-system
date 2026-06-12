@@ -6,9 +6,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/liff" element={<LiffForm />} />
+        <Route path="/liff"  element={<LiffForm />} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="*" element={<Navigate to="/liff" replace />} />
+        <Route path="*"      element={<Navigate to="/liff" replace />} />
       </Routes>
     </Router>
   );

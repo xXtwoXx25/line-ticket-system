@@ -6,14 +6,14 @@ import {
 } from 'lucide-react';
 
 export default function AdminDashboard() {
-  const [tickets, setTickets]           = useState([]);
-  const [loading, setLoading]           = useState(true);
-  const [refreshing, setRefreshing]     = useState(false);
-  const [searchTerm, setSearchTerm]     = useState('');
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedTicket, setSelectedTicket] = useState(null);
-  const [toastMsg, setToastMsg]         = useState(null); // { type: 'success'|'error', text }
-  const [deletingId, setDeletingId]     = useState(null);
+  const [toastMsg, setToastMsg] = useState(null); // { type: 'success'|'error', text }
+  const [deletingId, setDeletingId] = useState(null);
 
   // ── Toast helper ─────────────────────────────────────────────────────────────
   const showToast = (type, text) => {
@@ -79,9 +79,9 @@ export default function AdminDashboard() {
   const filteredTickets = tickets.filter(t => {
     const q = searchTerm.toLowerCase();
     const matchesSearch =
-      (t.ticketNo    || '').toLowerCase().includes(q) ||
-      (t.branchName  || '').toLowerCase().includes(q) ||
-      (t.machineModel|| '').toLowerCase().includes(q) ||
+      (t.ticketNo || '').toLowerCase().includes(q) ||
+      (t.branchName || '').toLowerCase().includes(q) ||
+      (t.machineModel || '').toLowerCase().includes(q) ||
       (t.machineType || '').toLowerCase().includes(q);
     const matchesStatus = statusFilter === 'all' || t.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -89,9 +89,9 @@ export default function AdminDashboard() {
 
   // ── Stats ─────────────────────────────────────────────────────────────────────
   const stats = {
-    total:     tickets.length,
-    pending:   tickets.filter(t => t.status === 'pending').length,
-    assigned:  tickets.filter(t => t.status === 'assigned').length,
+    total: tickets.length,
+    pending: tickets.filter(t => t.status === 'pending').length,
+    assigned: tickets.filter(t => t.status === 'assigned').length,
     completed: tickets.filter(t => t.status === 'completed').length,
   };
 
@@ -99,11 +99,11 @@ export default function AdminDashboard() {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'pending':
-        return <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold flex items-center gap-1 w-fit"><Clock className="w-3 h-3"/>รอดำเนินการ</span>;
+        return <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold flex items-center gap-1 w-fit"><Clock className="w-3 h-3" />รอดำเนินการ</span>;
       case 'assigned':
-        return <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold flex items-center gap-1 w-fit"><Wrench className="w-3 h-3"/>กำลังดำเนินการ</span>;
+        return <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold flex items-center gap-1 w-fit"><Wrench className="w-3 h-3" />กำลังดำเนินการ</span>;
       case 'completed':
-        return <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold flex items-center gap-1 w-fit"><CheckCircle2 className="w-3 h-3"/>เสร็จสิ้น</span>;
+        return <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold flex items-center gap-1 w-fit"><CheckCircle2 className="w-3 h-3" />เสร็จสิ้น</span>;
       default:
         return <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">{status}</span>;
     }
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
       {toastMsg && (
         <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl shadow-lg text-white text-sm font-medium flex items-center gap-2 transition-all
           ${toastMsg.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
-          {toastMsg.type === 'success' ? <CheckCircle2 className="w-4 h-4"/> : <AlertTriangle className="w-4 h-4"/>}
+          {toastMsg.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
           {toastMsg.text}
         </div>
       )}
@@ -138,7 +138,7 @@ export default function AdminDashboard() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-40 p-4">
           <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm">
             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle className="w-6 h-6 text-red-500"/>
+              <AlertTriangle className="w-6 h-6 text-red-500" />
             </div>
             <h3 className="text-lg font-bold text-gray-800 text-center mb-2">ยืนยันการลบ</h3>
             <p className="text-gray-500 text-sm text-center mb-6">ต้องการลบ Ticket นี้? ไม่สามารถกู้คืนได้</p>
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
               disabled={refreshing}
               className="flex items-center gap-2 px-4 py-2 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-xl hover:bg-yellow-100 transition text-sm font-medium disabled:opacity-50"
             >
-              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`}/>
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
               {refreshing ? 'กำลังโหลด...' : 'รีเฟรช'}
             </button>
           </div>
@@ -178,10 +178,10 @@ export default function AdminDashboard() {
           {/* ── Stats Row ── */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
             {[
-              { label: 'ทั้งหมด',           value: stats.total,     color: 'bg-gray-100 text-gray-700' },
-              { label: 'รอดำเนินการ',        value: stats.pending,   color: 'bg-yellow-100 text-yellow-700' },
-              { label: 'กำลังดำเนินการ',     value: stats.assigned,  color: 'bg-blue-100 text-blue-700' },
-              { label: 'เสร็จสิ้น',          value: stats.completed, color: 'bg-green-100 text-green-700' },
+              { label: 'ทั้งหมด', value: stats.total, color: 'bg-gray-100 text-gray-700' },
+              { label: 'รอดำเนินการ', value: stats.pending, color: 'bg-yellow-100 text-yellow-700' },
+              { label: 'กำลังดำเนินการ', value: stats.assigned, color: 'bg-blue-100 text-blue-700' },
+              { label: 'เสร็จสิ้น', value: stats.completed, color: 'bg-green-100 text-green-700' },
             ].map(s => (
               <div key={s.label} className={`${s.color} rounded-xl p-3 text-center`}>
                 <p className="text-2xl font-bold">{s.value}</p>
@@ -194,7 +194,7 @@ export default function AdminDashboard() {
         {/* ── Search & Filter ── */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="ค้นหา Ticket, สาขา, รุ่นเครื่อง..."
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
             />
           </div>
           <div className="relative">
-            <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"/>
+            <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
@@ -254,7 +254,7 @@ export default function AdminDashboard() {
                           onClick={e => { e.stopPropagation(); setSelectedTicket(ticket); }}
                           className="p-2 text-gray-400 hover:text-yellow-600 hover:bg-yellow-100 rounded-lg transition"
                         >
-                          <Eye className="w-4 h-4"/>
+                          <Eye className="w-4 h-4" />
                         </button>
                       </td>
                     </tr>
@@ -262,7 +262,7 @@ export default function AdminDashboard() {
                   {filteredTickets.length === 0 && (
                     <tr>
                       <td colSpan="6" className="p-12 text-center text-gray-400">
-                        <Search className="w-8 h-8 mx-auto mb-2 opacity-40"/>
+                        <Search className="w-8 h-8 mx-auto mb-2 opacity-40" />
                         ไม่พบ Ticket ที่ค้นหา
                       </td>
                     </tr>
@@ -285,7 +285,7 @@ export default function AdminDashboard() {
                   onClick={() => setSelectedTicket(null)}
                   className="p-1.5 hover:bg-yellow-600 rounded-lg transition"
                 >
-                  <X className="w-4 h-4"/>
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
@@ -313,7 +313,7 @@ export default function AdminDashboard() {
                 <div>
                   <p className="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-2">สถานที่</p>
                   <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0"/>
+                    <MapPin className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-semibold text-gray-800 text-sm">{selectedTicket.branchName}</p>
                       <p className="text-gray-500 text-xs mt-0.5">{selectedTicket.address}</p>
@@ -334,13 +334,13 @@ export default function AdminDashboard() {
                   <p className="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-2">กำหนดการ</p>
                   <div className="flex items-center gap-3 text-sm text-gray-700">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-blue-400"/>
+                      <Calendar className="w-4 h-4 text-blue-400" />
                       {selectedTicket.installDate
                         ? new Date(selectedTicket.installDate).toLocaleDateString('th-TH')
                         : '-'}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4 text-blue-400"/>
+                      <Clock className="w-4 h-4 text-blue-400" />
                       {selectedTicket.installTime || '-'}
                     </span>
                   </div>
@@ -373,7 +373,7 @@ export default function AdminDashboard() {
                   onClick={() => setDeletingId(selectedTicket._id)}
                   className="w-full py-2.5 flex items-center justify-center gap-2 text-red-500 hover:bg-red-50 border border-red-100 rounded-xl transition font-medium text-sm"
                 >
-                  <Trash2 className="w-4 h-4"/> ลบ Ticket
+                  <Trash2 className="w-4 h-4" /> ลบ Ticket
                 </button>
               </div>
             </div>
