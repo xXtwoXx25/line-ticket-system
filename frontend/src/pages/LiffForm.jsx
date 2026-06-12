@@ -34,22 +34,32 @@ export default function LiffForm() {
   useEffect(() => {
     const initLiff = async () => {
       try {
-        await liff.init({ liffId: import.meta.env.VITE_LIFF_ID });
-        
+        await liff.init({
+          liffId: import.meta.env.VITE_LIFF_ID,
+          // withLoginOnExternalBrowser: true  ← uncomment if opening in regular browser
+        });
+
+        console.log('[LIFF] isLoggedIn:', liff.isLoggedIn());
+        console.log('[LIFF] isInClient:', liff.isInClient());
+
         if (!liff.isLoggedIn()) {
-          liff.login();
-          return;
+          // Redirect back to this exact page after login (preserves query params)
+          liff.login({ redirectUri: window.location.href });
+          return; // stop here — browser will redirect
         }
 
+        // ── Logged in: get profile ───────────────────────────────────────────
         const userProfile = await liff.getProfile();
+        console.log('[LIFF] Profile:', userProfile.displayName);
         setProfile(userProfile);
 
-        // Try to get context (group ID) if opened from a group
+        // ── Get groupId from LIFF context or URL param ───────────────────────
         const context = liff.getContext();
-        if (context && context.groupId) {
+        console.log('[LIFF] Context type:', context?.type);
+
+        if (context?.groupId) {
           setGroupId(context.groupId);
         } else {
-          // Alternative: check URL params if we passed it manually
           const params = new URLSearchParams(window.location.search);
           const gId = params.get('groupId');
           if (gId) setGroupId(gId);
@@ -57,8 +67,8 @@ export default function LiffForm() {
 
         setIsLiffReady(true);
       } catch (err) {
-        console.error('LIFF init failed', err);
-        setError('ไม่สามารถเชื่อมต่อ LINE ได้ กรุณาลองใหม่อีกครั้ง');
+        console.error('[LIFF] init failed:', err);
+        setError(`ไม่สามารถเชื่อมต่อ LINE ได้: ${err.message || 'กรุณาลองใหม่อีกครั้ง'}`);
       }
     };
 
@@ -74,7 +84,7 @@ export default function LiffForm() {
     if (!formData.googleMapUrl) newErrors.googleMapUrl = 'กรุณากรอก Google Maps URL';
     if (!formData.installDate) newErrors.installDate = 'กรุณาเลือกวันที่ติดตั้ง';
     if (!formData.installTime) newErrors.installTime = 'กรุณาเลือกเวลาติดตั้ง';
-    
+
     setFormErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -84,10 +94,8 @@ export default function LiffForm() {
     setFormData(prev => ({
       ...prev,
       [name]: value,
-      // Reset model when type changes
       ...(name === 'machineType' && { machineModel: '' })
     }));
-    // Clear error for this field
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -96,21 +104,21 @@ export default function LiffForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
     try {
       const payload = {
         ...formData,
         lineUserId: profile.userId,
         lineDisplayName: profile.displayName,
-        groupId: groupId // Pass group ID so backend knows where to send confirmation
+        groupId: groupId
       };
 
       const res = await createTicket(payload);
       setTicketNo(res.data.data.ticketNo);
       setIsSuccess(true);
     } catch (err) {
-      console.error(err);
+      console.error('[SUBMIT] Error:', err);
       setError('เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง');
     } finally {
       setIsSubmitting(false);
@@ -118,9 +126,14 @@ export default function LiffForm() {
   };
 
   const handleClose = () => {
-    liff.closeWindow();
+    if (liff.isInClient()) {
+      liff.closeWindow();
+    } else {
+      window.close();
+    }
   };
 
+  // ── Error screen ─────────────────────────────────────────────────────────────
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
@@ -136,6 +149,7 @@ export default function LiffForm() {
     );
   }
 
+  // ── Success screen ───────────────────────────────────────────────────────────
   if (isSuccess) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
@@ -145,7 +159,7 @@ export default function LiffForm() {
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">เปิด Ticket สำเร็จ</h2>
           <p className="text-gray-600 mb-6">ระบบได้บันทึกข้อมูลและแจ้งเตือนไปยังกลุ่มไลน์แล้ว</p>
-          
+
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
             <p className="text-sm text-yellow-800 mb-1">หมายเลข Ticket ของคุณ</p>
             <p className="text-xl font-mono font-bold text-yellow-600">{ticketNo}</p>
@@ -159,6 +173,7 @@ export default function LiffForm() {
     );
   }
 
+  // ── Loading screen ───────────────────────────────────────────────────────────
   if (!isLiffReady || !profile) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -168,6 +183,7 @@ export default function LiffForm() {
     );
   }
 
+  // ── Main form ────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
       {/* Header */}
@@ -187,13 +203,13 @@ export default function LiffForm() {
       <div className="px-4 -mt-10">
         <div className="bg-white rounded-3xl shadow-xl p-6">
           <form onSubmit={handleSubmit} className="space-y-5">
-            
+
             {/* Machine Info */}
             <div className="space-y-4">
               <h3 className="font-bold text-gray-800 flex items-center gap-2 border-b pb-2">
                 <PenTool className="w-5 h-5 text-yellow-500" /> ข้อมูลเครื่อง
               </h3>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">ประเภทเครื่อง *</label>
                 <select
@@ -233,7 +249,7 @@ export default function LiffForm() {
               <h3 className="font-bold text-gray-800 flex items-center gap-2 border-b pb-2">
                 <MapPin className="w-5 h-5 text-yellow-500" /> ข้อมูลสถานที่
               </h3>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อสาขา *</label>
                 <input
@@ -279,32 +295,28 @@ export default function LiffForm() {
               <h3 className="font-bold text-gray-800 flex items-center gap-2 border-b pb-2">
                 <Calendar className="w-5 h-5 text-yellow-500" /> กำหนดการ
               </h3>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">วันที่ติดตั้ง *</label>
-                  <div className="relative">
-                    <input
-                      type="date"
-                      name="installDate"
-                      value={formData.installDate}
-                      onChange={handleChange}
-                      className={`w-full p-3 rounded-xl border ${formErrors.installDate ? 'border-red-500' : 'border-gray-200'} focus:ring-2 focus:ring-yellow-200 focus:outline-none transition`}
-                    />
-                  </div>
+                  <input
+                    type="date"
+                    name="installDate"
+                    value={formData.installDate}
+                    onChange={handleChange}
+                    className={`w-full p-3 rounded-xl border ${formErrors.installDate ? 'border-red-500' : 'border-gray-200'} focus:ring-2 focus:ring-yellow-200 focus:outline-none transition`}
+                  />
                   {formErrors.installDate && <p className="text-red-500 text-xs mt-1">{formErrors.installDate}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">เวลา *</label>
-                  <div className="relative">
-                    <input
-                      type="time"
-                      name="installTime"
-                      value={formData.installTime}
-                      onChange={handleChange}
-                      className={`w-full p-3 rounded-xl border ${formErrors.installTime ? 'border-red-500' : 'border-gray-200'} focus:ring-2 focus:ring-yellow-200 focus:outline-none transition`}
-                    />
-                  </div>
+                  <input
+                    type="time"
+                    name="installTime"
+                    value={formData.installTime}
+                    onChange={handleChange}
+                    className={`w-full p-3 rounded-xl border ${formErrors.installTime ? 'border-red-500' : 'border-gray-200'} focus:ring-2 focus:ring-yellow-200 focus:outline-none transition`}
+                  />
                   {formErrors.installTime && <p className="text-red-500 text-xs mt-1">{formErrors.installTime}</p>}
                 </div>
               </div>
@@ -336,7 +348,7 @@ export default function LiffForm() {
                 'ยืนยันการเปิด Ticket'
               )}
             </button>
-            
+
           </form>
         </div>
       </div>

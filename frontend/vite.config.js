@@ -8,9 +8,14 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    // Dev only: allow ngrok host & proxy /api to local backend
     host: true,
-    allowedHosts: [
-      'spotty-sincere-atlas.ngrok-free.dev'
-    ]
+    allowedHosts: 'all',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      }
+    }
   }
 })
