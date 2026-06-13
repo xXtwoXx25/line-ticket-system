@@ -21,7 +21,7 @@ const handleEvent = async (event) => {
     console.log('[LINE] Keyword matched! Sending reply...');
 
     const groupId = event.source?.groupId || null;
-    const userId  = event.source?.userId  || null;
+    const userId = event.source?.userId || null;
     const liffUrl = `https://liff.line.me/${process.env.LIFF_ID}${groupId ? '?groupId=' + groupId : ''}`;
 
     console.log('[LINE] groupId:', groupId, '| userId:', userId);
@@ -34,27 +34,33 @@ const handleEvent = async (event) => {
         type: 'bubble',
         hero: {
           type: 'image',
-          url: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+          url: 'https://res.cloudinary.com/docoqdsh9/image/upload/v1781336321/ChatGPT_Image_Jun_13_2026_02_36_33_PM_zvvvvn.png',
           size: 'full',
-          aspectRatio: '20:13',
-          aspectMode: 'cover'
+          aspectRatio: '1:1',
+          aspectMode: 'cover',
+          action: {
+            type: 'uri',
+            uri: liffUrl
+          }
         },
         body: {
           type: 'box',
           layout: 'vertical',
+          paddingAll: '8%',
           contents: [
             {
               type: 'text',
-              text: 'แจ้งติดตั้งเครื่อง',
+              text: '✨ แจ้งติดตั้งเครื่อง',
               weight: 'bold',
               size: 'xl',
-              color: '#FFCC00'
+              color: '#F59E0B',
+              wrap: true
             },
             {
               type: 'text',
-              text: 'กรุณากดปุ่มด้านล่างเพื่อเปิด Ticket',
+              text: 'ระบบพร้อมรับข้อมูลการติดตั้งของคุณแล้ว กรุณากดปุ่มด้านล่างเพื่อเปิด Ticket ค่ะ',
               size: 'sm',
-              color: '#999999',
+              color: '#6B7280',
               margin: 'md',
               wrap: true
             }
@@ -63,21 +69,21 @@ const handleEvent = async (event) => {
         footer: {
           type: 'box',
           layout: 'vertical',
-          spacing: 'sm',
+          paddingAll: '8%',
+          paddingTop: '0px',
           contents: [
             {
               type: 'button',
               style: 'primary',
-              color: '#FFCC00',
+              color: '#F59E0B',
               height: 'sm',
               action: {
                 type: 'uri',
-                label: 'เปิดฟอร์มติดตั้ง',
+                label: '📝 เปิดฟอร์มติดตั้ง',
                 uri: liffUrl
               }
             }
-          ],
-          flex: 0
+          ]
         }
       }
     };
