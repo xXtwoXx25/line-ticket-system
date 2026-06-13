@@ -26,7 +26,7 @@ export default function LiffForm() {
     googleMapUrl: '',
     installDate: '',
     installTime: '',
-    description: ''
+    image: ''
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -327,15 +327,27 @@ export default function LiffForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">รายละเอียดเพิ่มเติม</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="เช่น จุดสังเกต ข้อควรระวัง..."
-                  rows="2"
-                  className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-200 focus:outline-none transition"
-                ></textarea>
+                <label className="block text-sm font-medium text-gray-700 mb-1">อัพโหลดรูปภาพ</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setFormData(prev => ({ ...prev, image: reader.result }));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-yellow-200 focus:outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100"
+                />
+                {formData.image && (
+                  <div className="mt-3">
+                    <img src={formData.image} alt="Preview" className="w-full max-h-48 object-cover rounded-xl border border-gray-200" />
+                  </div>
+                )}
               </div>
             </div>
 

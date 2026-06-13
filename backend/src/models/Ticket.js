@@ -42,7 +42,7 @@ const ticketSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  description: {
+  image: {
     type: String,
     required: false
   },

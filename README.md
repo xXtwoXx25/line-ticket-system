@@ -17,7 +17,7 @@ Full-stack application for managing machine installation tickets via LINE LIFF a
 - LINE Developer Account (Messaging API channel & LIFF channel)
 
 ### 2. LINE Channel Setup
-1. ไปที่ [LINE Developers Console](https://developers.line.biz/)
+1. ไปที่ [LINE Developers Console](/https://developers.line.biz)
 2. สร้าง Provider ใหม่ และสร้าง Channel 2 ประเภท:
    - **Messaging API** (สำหรับ Bot)
    - **LINE Login** (สำหรับ LIFF)
