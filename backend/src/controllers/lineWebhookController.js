@@ -50,10 +50,10 @@ const handleEvent = async (event) => {
           contents: [
             {
               type: 'text',
-              text: '✨ แจ้งติดตั้งเครื่อง',
+              text: 'แจ้งติดตั้งเครื่อง',
               weight: 'bold',
               size: 'xl',
-              color: '#F59E0B',
+              color: '#FFCC00',
               wrap: true
             },
             {
@@ -75,11 +75,11 @@ const handleEvent = async (event) => {
             {
               type: 'button',
               style: 'primary',
-              color: '#F59E0B',
+              color: '#FFCC00',
               height: 'sm',
               action: {
                 type: 'uri',
-                label: '📝 เปิดฟอร์มติดตั้ง',
+                label: 'เปิดฟอร์มติดตั้ง',
                 uri: liffUrl
               }
             }
