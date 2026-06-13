@@ -34,33 +34,27 @@ const handleEvent = async (event) => {
         type: 'bubble',
         hero: {
           type: 'image',
-          url: 'https://res.cloudinary.com/docoqdsh9/image/upload/v1781336321/ChatGPT_Image_Jun_13_2026_02_36_33_PM_zvvvvn.png',
+          url: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
           size: 'full',
-          aspectRatio: '1:1',
-          aspectMode: 'cover',
-          action: {
-            type: 'uri',
-            uri: liffUrl
-          }
+          aspectRatio: '20:13',
+          aspectMode: 'cover'
         },
         body: {
           type: 'box',
           layout: 'vertical',
-          paddingAll: '8%',
           contents: [
             {
               type: 'text',
               text: 'แจ้งติดตั้งเครื่อง',
               weight: 'bold',
               size: 'xl',
-              color: '#FFCC00',
-              wrap: true
+              color: '#FFCC00'
             },
             {
               type: 'text',
-              text: 'ระบบพร้อมรับข้อมูลการติดตั้งของคุณแล้ว กรุณากดปุ่มด้านล่างเพื่อเปิด Ticket ค่ะ',
+              text: 'กรุณากดปุ่มด้านล่างเพื่อเปิด Ticket',
               size: 'sm',
-              color: '#6B7280',
+              color: '#999999',
               margin: 'md',
               wrap: true
             }
@@ -69,8 +63,7 @@ const handleEvent = async (event) => {
         footer: {
           type: 'box',
           layout: 'vertical',
-          paddingAll: '8%',
-          paddingTop: '0px',
+          spacing: 'sm',
           contents: [
             {
               type: 'button',
@@ -83,7 +76,8 @@ const handleEvent = async (event) => {
                 uri: liffUrl
               }
             }
-          ]
+          ],
+          flex: 0
         }
       }
     };
