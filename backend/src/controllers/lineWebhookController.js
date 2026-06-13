@@ -34,7 +34,7 @@ const handleEvent = async (event) => {
         type: 'bubble',
         hero: {
           type: 'image',
-          url: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+          url: 'https://res.cloudinary.com/docoqdsh9/image/upload/v1781337347/b0c3f25b-1e27-4a9a-a273-be1f6021b5bb_vayerf.png',
           size: 'full',
           aspectRatio: '20:13',
           aspectMode: 'cover'
