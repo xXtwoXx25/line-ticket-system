@@ -38,6 +38,15 @@ const sendTicketConfirmation = async (target, ticket) => {
             }
           ]
         },
+        ...(ticket.image ? {
+          hero: {
+            type: 'image',
+            url: ticket.image,
+            size: 'full',
+            aspectRatio: '20:13',
+            aspectMode: 'cover'
+          }
+        } : {}),
         body: {
           type: 'box',
           layout: 'vertical',

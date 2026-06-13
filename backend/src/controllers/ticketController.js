@@ -1,6 +1,7 @@
 const Ticket = require('../models/Ticket');
 const generateTicketNo = require('../utils/generateTicketNo');
 const { sendTicketConfirmation } = require('../services/lineService');
+const { uploadImage } = require('../utils/cloudinary');
 
 // @desc    Create a new ticket
 // @route   POST /api/tickets
@@ -10,11 +11,18 @@ exports.createTicket = async (req, res) => {
     
     // We expect groupId to be passed if it was created from a group, 
     // to send back the flex message to that group
-    const { groupId, ...ticketData } = req.body;
+    const { groupId, image, ...ticketData } = req.body;
+
+    let imageUrl = null;
+    if (image) {
+      // Upload base64 image to Cloudinary
+      imageUrl = await uploadImage(image);
+    }
 
     const ticket = new Ticket({
       ticketNo,
-      ...ticketData
+      ...ticketData,
+      ...(imageUrl && { image: imageUrl })
     });
 
     await ticket.save();
