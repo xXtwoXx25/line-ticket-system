@@ -301,7 +301,7 @@ export default function LiffForm() {
                 <Calendar className="w-5 h-5 text-yellow-500" /> กำหนดการ
               </h3>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">วันที่ติดตั้ง *</label>
                   <input
